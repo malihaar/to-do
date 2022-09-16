@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
@@ -7,6 +7,13 @@ import EditTask from "./components/EditTask";
 
 
 function App() {
+
+  const APP_ID = "bb8a7ee0";
+  const APP_KEY = "9efed7cfdbde26da1f1e707baf61296c";
+
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
   const [showEditTask, setShowEditTask] = useState(false);
   const [tasks, setTasks] = useState([
     {
@@ -24,6 +31,24 @@ function App() {
       done: true,
     },
   ]);
+
+  useEffect(() => {
+    fetch(`https://api.edamam.com/search?q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}§`)
+      .then((response) => {
+        // ...
+      })
+      .then((actualData) => {
+        setData(actualData);
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setData(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   //Add Task
   const addTask = async (task) => {
@@ -54,7 +79,10 @@ function App() {
   return (
     <Router>
       <div className="container">
-
+      {loading && <div>A moment please...</div>}
+      {error && (
+        <div>{`There is a problem fetching the post data - ${error}`}</div>
+      )} 
         <Header/>
         {showEditTask && <EditTask onEdit={()=>setShowEditTask===true} setShowEditTask={setShowEditTask}/>}
 
