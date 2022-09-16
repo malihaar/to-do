@@ -1,15 +1,18 @@
 import { useState } from "react";
 
-const EditTask = ({task,onEdit,setShowEditTask}) => {
+const EditTask = ({ task, onEdit, setShowEditTask }) => {
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
 
-  const onSubmit= (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    onEdit({text, description,category});
-    setShowEditTask(false)
-  }
+    setText(e.target.value);
+    setDescription(e.target.value);
+    setCategory(e.target.value);
+    onEdit({ text, description, category });
+    setShowEditTask(false);
+  };
   return (
     <form className="Edit-Form" onSubmit={onSubmit}>
       <div className="form-control">

@@ -1,19 +1,17 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
 import EditTask from "./components/EditTask";
 
-
 function App() {
-
   const APP_ID = "bb8a7ee0";
   const APP_KEY = "9efed7cfdbde26da1f1e707baf61296c";
 
-const [data, setData] = useState(null);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showEditTask, setShowEditTask] = useState(false);
   const [tasks, setTasks] = useState([
     {
@@ -33,7 +31,9 @@ const [error, setError] = useState(null);
   ]);
 
   useEffect(() => {
-    fetch(`https://api.edamam.com/search?q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}§`)
+    fetch(
+      `https://api.edamam.com/search?q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}§`
+    )
       .then((response) => {
         // ...
       })
@@ -57,14 +57,8 @@ const [error, setError] = useState(null);
     setTasks([...tasks, newTask]);
   };
   //Edit Task
-  const editTask = async (task,id) => {
-    console.log("edit task", task);
-    console.log("edit id", id);
+  const editTask = async (task) => {
     setShowEditTask(!showEditTask);
-    console.log(showEditTask)
-    // this.id =id;
-    // const newTask = { id, ...task };
-    // setTasks([...tasks, newTask]);
   };
 
   // Toggle done
@@ -79,17 +73,23 @@ const [error, setError] = useState(null);
   return (
     <Router>
       <div className="container">
-      {loading && <div>A moment please...</div>}
-      {error && (
-        <div>{`There is a problem fetching the post data - ${error}`}</div>
-      )} 
-        <Header/>
-        {showEditTask && <EditTask onEdit={()=>setShowEditTask===true} setShowEditTask={setShowEditTask}/>}
-
+        {loading && <div>A moment please...</div>}
+        {error && (
+          <div>{`There is a problem fetching the post data - ${error}`}</div>
+        )}
+        <Header />
         <Routes>
           <Route
             path="/"
-            element={<Tasks tasks={tasks} onToggle={toggleDone} onEdit={editTask} />}
+            element={
+              <Tasks
+                tasks={tasks}
+                onToggle={toggleDone}
+                onEdit={editTask}
+                setShowEditTask={setShowEditTask}
+                showEditTask={showEditTask}
+              />
+            }
           />
           <Route path="/add" element={<AddTask onAdd={addTask} />} />
         </Routes>
